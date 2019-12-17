@@ -44,6 +44,7 @@ class HBNBCommand(cmd.Cmd):
             my_list = line.split(" ")
             obj = eval("{}()".format(my_list[0]))
             obj.save()
+
             if len(my_list) > 2:
                 params = my_list[1:]
                 for attribute in params:
@@ -54,10 +55,10 @@ class HBNBCommand(cmd.Cmd):
                         clean_value = eval(clean_value)
                     except Exception:
                         clean_value = clean_value
-                setattr(obj, attribute_to_clean[0], clean_value)
+                    setattr(obj, attribute_to_clean[0], clean_value)
                 obj.save()
-
             print("{}".format(obj.id))
+
         except SyntaxError:
             print("** class name missing **")
         except NameError:
