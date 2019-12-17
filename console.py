@@ -45,6 +45,18 @@ class HBNBCommand(cmd.Cmd):
             obj = eval("{}()".format(my_list[0]))
             obj.save()
             print("{}".format(obj.id))
+            if len(my_list) > 2:
+                params = my_list[1:]
+                for attribute in params:
+                    attribute_to_clean = attribute.split("=")
+                    clean_value = attribute_to_clean[1].replace("_", " ")
+                    clean_value = clean_value.replace('"', "")
+                    try:
+                        clean_value = eval(clean_value)
+                    except Exception:
+                        clean_value = clean_value
+                    setattr(obj, attribute_to_clean[0], clean_value)
+                obj.save()
         except SyntaxError:
             print("** class name missing **")
         except NameError:
