@@ -53,7 +53,7 @@ class HBNBCommand(cmd.Cmd):
                     clean_value = eval(clean_value)
                 except Exception:
                     clean_value = clean_value
-                    setattr(obj, attribute_to_clean[0], clean_value)
+                setattr(obj, attribute_to_clean[0], clean_value)
             obj.save()
             print("{}".format(obj.id))
 
