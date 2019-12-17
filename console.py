@@ -43,6 +43,7 @@ class HBNBCommand(cmd.Cmd):
                 raise SyntaxError()
             my_list = line.split(" ")
             obj = eval("{}()".format(my_list[0]))
+            obj.save()
             if len(my_list) > 2:
                 params = my_list[1:]
                 for attribute in params:
