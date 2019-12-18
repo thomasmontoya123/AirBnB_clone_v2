@@ -38,7 +38,7 @@ class DBStorage:
         class_list = ["User", "State", "City", "Amenity", "Place", "Review"]
         dict_to_return = {}
         if cls is None:
-            for table in my_cls:
+            for table in class_list:
                 query = self.__session.query(eval(table)).all()
                 for obj in query:
                     key = "{}.{}".format(type(obj).__name__, obj.id)
