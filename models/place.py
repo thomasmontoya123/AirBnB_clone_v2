@@ -1,15 +1,9 @@
 #!/usr/bin/python3
 """This is the place class"""
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Float, ForeignKey, Integer, table
-from sqlalchemy.orm import relationship
-from os import environ
+from sqlalchemy import Column, String, Float, ForeignKey, Integer
 
 
-place_amenity = Table('place_amenity', Base.metadata,
-                      Column('place_id', String(60), ForeignKey('places.id')),
-                      Column('amenity_id', String(60),
-                             ForeignKey('amenities.id')))
 
 class Place(BaseModel, Base):
     """This is the class for Place
@@ -38,17 +32,3 @@ class Place(BaseModel, Base):
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
     amenity_ids = []
-
-    if environ['HBNB_TYPE_STORAGE'] != 'db':
-        @property
-        def reviews(self):
-            """FileStorage relationship between Place and Review """
-            reviews = storage.all(Review)
-            reviews_relation = []
-            for review in reviews.values():
-                if review.place_id == self.id:
-                    reviews_relation = reviews_relation.append(review)
-            return reviews_relation
-    else:
-        reviews = relationship("Review", backref="places",
-                            cascade="delete")
