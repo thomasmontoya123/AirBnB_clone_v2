@@ -35,7 +35,7 @@ class DBStorage:
 
     def all(self, cls=None):
         '''return a dictionary '''
-        class_list = ["State", "City"]
+        class_list = ["State", "City", "User", "Place"]
         dict_to_return = {}
         if cls is None:
             for table in class_list:
