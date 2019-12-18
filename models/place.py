@@ -4,6 +4,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Float, ForeignKey, Integer
 from os import environ
 from sqlalchemy.orm import relationship
+import models
 
 
 class Place(BaseModel, Base):
@@ -42,7 +43,7 @@ class Place(BaseModel, Base):
         @property
         def reviews(self):
             """ RElationship """
-            reviews = storage.all(Review)
+            reviews = models.storage.all(Review)
             reviews_relation = []
             for review in reviews.values():
                 if review.place_id == self.id:
