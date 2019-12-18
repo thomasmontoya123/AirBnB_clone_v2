@@ -11,6 +11,7 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from shlex import split
+import copy
 
 
 class HBNBCommand(cmd.Cmd):
@@ -131,21 +132,28 @@ class HBNBCommand(cmd.Cmd):
             NameError: when there is no object taht has the name
         """
         objects = storage.all()
-        my_list = []
+        new_list = []
         if not line:
             for key in objects:
-                my_list.append(objects[key])
-            print(my_list)
+                new_obj = copy.deepcopy(objects[key])
+                try:
+                    del new_obj.__dict__["_sa_instance_state"]
+                except:
+                    pass
+                new_list.append(new_obj)
+            print(new_list)
             return
         try:
-            args = line.split(" ")
-            if args[0] not in self.all_classes:
+            arguments = line.split(" ")
+            if arguments[0] not in self.all_classes:
                 raise NameError()
             for key in objects:
                 name = key.split('.')
-                if name[0] == args[0]:
-                    my_list.append(objects[key])
-            print(my_list)
+                if name[0] == arguments[0]:
+                    new_obj = copy.deepcopy(objects[key])
+                    del new_obj.__dict__["_sa_instance_state"]
+                    new_list.append(new_obj)
+            print(new_list)
         except NameError:
             print("** class doesn't exist **")
 

@@ -30,36 +30,32 @@ class DBStorage:
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
                            .format(user, password, host, database),
                            pool_pre_ping=True)
-        if hbn_env == "test":
+        if environ["HBNB_ENV"] == "test":
             Base.metadata.drop_all(self.__engine)
 
-    def all(self, cls=None): 
+    def all(self, cls=None):
         '''return a dictionary '''
-        dictionary_to_return = {}
-        if cls:
-            dir_to_check = {'User': User, 'State':State, 'City':City, 'Amenity':City, 'Place': Place, 'Review':Review}
-            cls = dir_to_check[cls]
-
-            result = self.__session.query(cls).all()
-
-            for element in result:
-                key = element.__class__.__name__ + '.' + element.id
-                dictionary_to_return[key] = element
+        class_list = ["User", "State", "City", "Amenity", "Place", "Review"]
+        dict_to_return = {}
+        if cls is None:
+            for table in my_cls:
+                query = self.__session.query(eval(table)).all()
+                for obj in query:
+                    '''key = "{}.{}".format(type(obj).__name__, obj.id)'''
+                    key = "."join(cls, obj.id)
+                    dict_to_return[key] = obj
         else:
-            every_type = [User, State, City, Amenity, Place, Review]
-
-            for every_class in every_type:
-                query = self.__session.query(every_class).all()
-                for element_no_cls in query:
-                    key = element_no_cls.__class__.__name__ + '.' + element_no_cls.id
-                    dictionary_to_return[key] = element_no_cls
-
-        return dictionary_to_return
+            query = self.__session.query(eval(cls)).all()
+            for obj in query:
+                '''key = "{}.{}".format(type(obj).__name__, obj.id)'''
+                key = "."join(cls, obj.id)
+                dict_to_return[key] = obj
+        return dict_to_return
 
     def new(self, obj):
         '''add the object to the current database session '''
-        self.__session.add(obj)
-        self.__session.commit()
+        if obj:
+            self.__session.add(obj)
 
     def save(self):
         ''' commit all changes of the current database session '''
@@ -68,8 +64,9 @@ class DBStorage:
     def delete(self, obj=None):
         '''delete from the current database session '''
         if obj:
-            self.__session.delete(obj)
-            self.__session.commit()
+            result = self.__session.query(eval(obj)).\
+                filter(id == obj.id).first()
+            result.delete()
 
     def reload(self):
         '''create all tables in the database (feature of SQLAlchemy) '''
