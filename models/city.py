@@ -3,6 +3,9 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey
 from os import environ
+from sqlalchemy.orm import relationship
+
+
 
 class City(BaseModel, Base):
     """This is the class for City
