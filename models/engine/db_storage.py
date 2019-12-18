@@ -41,14 +41,12 @@ class DBStorage:
             for table in my_cls:
                 query = self.__session.query(eval(table)).all()
                 for obj in query:
-                    '''key = "{}.{}".format(type(obj).__name__, obj.id)'''
-                    key = "."join(cls, obj.id)
+                    key = "{}.{}".format(type(obj).__name__, obj.id)
                     dict_to_return[key] = obj
         else:
             query = self.__session.query(eval(cls)).all()
             for obj in query:
-                '''key = "{}.{}".format(type(obj).__name__, obj.id)'''
-                key = "."join(cls, obj.id)
+                key = "{}.{}".format(type(obj).__name__, obj.id)
                 dict_to_return[key] = obj
         return dict_to_return
 
