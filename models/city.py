@@ -4,7 +4,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey
 from os import environ
 from sqlalchemy.orm import relationship
-
+import models
 
 
 class City(BaseModel, Base):
@@ -22,7 +22,7 @@ class City(BaseModel, Base):
         @property
         def cities(self):
             '''FileStorage relationship between State and City '''
-            cities = storage.all(City)
+            cities = models.storage.all(City)
             cities_relation = []
 
             for city in cities.values():
