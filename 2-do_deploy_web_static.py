@@ -21,23 +21,27 @@ def do_pack():
 
 
 def do_deploy(archive_path):
-    """ DEploys """
+    '''distributes an archive to your web servers '''
     if not path.exists(archive_path):
         return False
 
-    full_name = archive_path[9:]
-    short_name = archive_path[9:-4]
-
     try:
+        full_name = archive_path[9:]
+        short_name = archive_path[9:-4]
         put(archive_path, "/tmp/{}".format(full_name))
-        run("mkdir -p /data/web_static/releases/{}".format(short_name))
-        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}".format(full_name, short_name))
+        run("mkdir -p /data/web_static/releases/{}/".format(short_name))
+        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/"
+            .format(full_name, short_name))
+        run("mv /data/web_static/releases/{}/web_static/*\
+                            /data/web_static/releases/{}/"
+            .format(short_name, short_name))
         run("rm /tmp/{}".format(full_name))
-        run("mv /data/web_static/releases/{}/web_static/* \
-        /data/web_static/releases/{}/".format(short_name, short_name))
-        run("rm -rf /data/web_static/releases/{}/web_static".format(short_name))
-        run("rm -rf /data/web_static/current")
-        run("ln -s /data/web_static/releases/{}/ /data/web_static/current".format(short_name))
+        run("rm -fr /data/web_static/current")
+        run("rm -fr /data/web_static/releases/{}/web_static"
+            .format(short_name))
+        run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
+            .format(short_name))
+
         print("New version deployed!")
 
     except Exception:
