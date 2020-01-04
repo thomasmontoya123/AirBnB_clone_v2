@@ -1,9 +1,5 @@
 #!/usr/bin/python3
-"""
-creates and distributes an archive to your web servers,
-using the function deploy
-"""
-
+'''distributes an archive to your web servers'''
 from datetime import datetime
 from fabric.operations import local, put, run
 from fabric.api import env

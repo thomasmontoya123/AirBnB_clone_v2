@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-'''Distributes an archive to the web servers,
-using the function do_deploy'''
+'''distributes an archive to your web servers '''
+
 from datetime import datetime
 from fabric.operations import local, put, run
 from fabric.api import env
@@ -17,17 +17,18 @@ def do_pack():
 
     if archive.failed:
         return None
-    return archive
+    return path
 
 
 def do_deploy(archive_path):
-    '''distributes an archive to your web servers '''
+    '''creates and distributes an archive to your web servers'''
     if not path.exists(archive_path):
         return False
 
     try:
         full_name = archive_path[9:]
         short_name = archive_path[9:-4]
+
         put(archive_path, "/tmp/{}".format(full_name))
         run("mkdir -p /data/web_static/releases/{}/".format(short_name))
         run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/"
