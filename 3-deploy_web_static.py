@@ -32,21 +32,21 @@ def do_deploy(archive_path):
         return False
 
     try:
-        my_name = archive_path[9:]
-        my_name_short = archive_path[9:-4]
-        put(archive_path, "/tmp/{}".format(my_name))
-        run("mkdir -p /data/web_static/releases/{}/".format(my_name_short))
+        full_name = archive_path[9:]
+        short_name = archive_path[9:-4]
+        put(archive_path, "/tmp/{}".format(full_name))
+        run("mkdir -p /data/web_static/releases/{}/".format(short_name))
         run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/"
-            .format(my_name, my_name_short))
+            .format(full_name, short_name))
         run("mv /data/web_static/releases/{}/web_static/*\
                             /data/web_static/releases/{}/"
-            .format(my_name_short, my_name_short))
-        run("rm /tmp/{}".format(my_name))
+            .format(short_name, short_name))
+        run("rm /tmp/{}".format(full_name))
         run("rm -fr /data/web_static/current")
         run("rm -fr /data/web_static/releases/{}/web_static"
-            .format(my_name_short))
+            .format(short_name))
         run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
-            .format(my_name_short))
+            .format(short_name))
         print("New version deployed!")
     except Exception:
         return False
