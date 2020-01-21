@@ -72,3 +72,8 @@ class DBStorage:
         session_factory =  sessionmaker(bind=self.__engine, expire_on_commit=False, autoflush=False)
         self.__scoop = scoped_session(session_factory)
         self.__session = self.__scoop()
+
+
+    def close(self):
+        '''calls remove'''
+        self.__session.remove()
