@@ -14,6 +14,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from os import environ
 from models.base_model import Base
 
+
 class DBStorage:
     '''New Engine'''
 
@@ -28,8 +29,8 @@ class DBStorage:
         database = environ.get('HBNB_MYSQL_DB')
         hbn_env = environ.get('HBNB_ENV')
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
-                           .format(user, password, host, database),
-                           pool_pre_ping=True)
+                                      .format(user, password, host, database),
+                                      pool_pre_ping=True)
         if hbn_env == "test":
             Base.metadata.drop_all(self.__engine)
 
@@ -69,11 +70,12 @@ class DBStorage:
     def reload(self):
         '''create all tables in the database (feature of SQLAlchemy) '''
         Base.metadata.create_all(bind=self.__engine)
-        session_factory =  sessionmaker(bind=self.__engine, expire_on_commit=False, autoflush=False)
+        session_factory = sessionmaker(bind=self.__engine,
+                                       expire_on_commit=False,
+                                       autoflush=False)
         self.__scoop = scoped_session(session_factory)
         self.__session = self.__scoop()
 
-
     def close(self):
         '''calls remove'''
-        self.__session.remove()
+        self.__session.close()
